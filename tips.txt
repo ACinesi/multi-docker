@@ -1,0 +1,7 @@
+# Nodemon is a utility that will monitor for any changes in your source and automatically restart your server. Perfect for development.
+
+volumes:
+      - /app/node_modules MEANS DO NOT TRY TO COPY node_modules folder
+      - ./server:/app EVERY ATTEMPT TO USE/ACCESS /app in the container will be redirected to ./server in our host
+
+# Look at the documentation on Docker Hub to set environment variables
