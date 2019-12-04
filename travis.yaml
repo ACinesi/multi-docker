@@ -1,0 +1,31 @@
+script:
+    - docker run -e CI=true USERNAME/react-test npm test
+
+## START HERE ##
+sudo: required
+services: #dependencies
+    - docker
+
+before_install: 
+    - docker build -t acinesi/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+    - docker run -e CI=true acinesi/react-test npm test #CI=true force test to run just once.
+
+after_success: # build production images.
+    - docker build -t acinesi/multi-client ./client
+    - docker build -t acinesi/multi-nginx ./nginx
+    - docker build -t acinesi/multi-server ./server
+    - docker build -t acinesi/multi-worker ./worker 
+    # Log in to the Docker CLI
+    - echo "$DOCKER PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+    # Take the images built above and push them to Docker hub
+    -  docker push acinesi/multi-client
+    -  docker push acinesi/multi-nginx
+    -  docker push acinesi/multi-server
+    -  docker push acinesi/multi-worker
+
+
+    
+
+
